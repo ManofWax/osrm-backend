@@ -348,6 +348,7 @@ function way_function (way, result)
 
   -- parse the remaining tags
   local name = way:get_value_by_key("name")
+  local pronounciation = way:get_value_by_key("name:pronounciation")
   local ref = way:get_value_by_key("ref")
   local junction = way:get_value_by_key("junction")
   -- local barrier = way:get_value_by_key("barrier", "")
@@ -357,6 +358,7 @@ function way_function (way, result)
   -- Set the name that will be used for instructions
   local has_ref = ref and "" ~= ref
   local has_name = name and "" ~= name
+  local has_pronounciation = pronounciation and "" ~= pronounciation
 
   if has_name and has_ref then
     result.name = name .. " (" .. ref .. ")"
@@ -364,8 +366,6 @@ function way_function (way, result)
     result.name = ref
   elseif has_name then
     result.name = name
---  else
-      --    result.name = highway  -- if no name exists, use way type
   end
 
   if junction and "roundabout" == junction then
@@ -402,6 +402,10 @@ function way_function (way, result)
         result.name = name .. " (" .. destination .. ")"
       end
     end
+  end
+
+  if has_pronounciation then
+    result.name = result.name .. "#" .. pronounciation
   end
 
   -- Override speed settings if explicit forward/backward maxspeeds are given
